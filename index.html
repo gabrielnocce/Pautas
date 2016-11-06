@@ -1,0 +1,165 @@
+ <!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link href="style/style.css" rel="stylesheet" type="text/css" />
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.9.2.custom.js"></script>
+<script type="text/javascript" src="js/abmc.js"></script>
+
+<body ng-app="myApp" ng-controller="userCtrl">
+
+<div class="container">
+
+	<h3>Ultimas pautas aprobadas</h3>
+    <p>
+  <small>Todo ciudadano perteneciente a la República Argentina tendrá la posibilidad de grabar una pauta publicitaria y postularla para ser difundida sin costo en los espacios publicitarios brindado por la televisión publica</small> <br>
+ </p><p>
+  <strong>Pasos para poder participar:</strong></p>
+  <ol>
+  <li>Desarrolla el contenido audiovisual y publicarlo en Youtube u otra red de reproducción</li>
+  <li>Ingresa a Proponer Pauta</li>
+  <li>Completa los datos de registro. En la descripción de la pauta mencionar que beneficios tendría la sociedad al tener acceso a dicho contenido</li>
+  <li>Listo! Guardar Cambios y recibirás una notificación con un código de seguimiento.</li>
+  <li>Una vez verificado el contenido se publicara en nuestro sitio web, con la intencion de que la sociedad decida por medio de puntuación que pauta será difundida en dicho espacio.</li>
+</ol>
+  
+
+	
+    
+    <div class="bar">
+    	<hr>
+	
+<a id="new" class="btn btn-success" style="cursor:pointer" onclick="agregar();"><span class="glyphicon glyphicon-user"></span> Proponer Pauta</a>
+<hr>
+</div>
+    		<div id="popupbox" style="left: 100px; width:500px">
+			<div>{{res}}</div>
+
+	<!-- MODIFICADO PARA AGREGAR TITULO "DELETE USER" -->
+	<h3>Crear Propuesta:</h3>
+	
+<hr>
+	<form class="form-horizontal" ng-submit="enviar()">
+    <P>
+      <label class="control-label" for="inputInfo">Datos del solicitante:</label>
+    </P>
+		<input type="hidden" ng-model="form.id">
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">Nombre:</label>
+		  <div class="col-sm-10">
+			<input type="text" ng-model="form.fName"  placeholder="Nombre">
+		  </div>
+		</div>	
+		<div class="form-group">
+		  <label class="col-sm-2 control-label">Apellido:</label>
+		  <div class="col-sm-10">
+			<input type="text" ng-model="form.lName"  placeholder="Apellido">
+		  </div>
+		</div>
+		<div class="form-group">
+		  <label class="col-lg-2 control-label">Contraseña:</label>
+		  <div class="col-lg-10">
+			<input type="password" ng-model="form.passw1" placeholder="Contraseña">
+		  </div>
+		</div>
+		<div class="form-group">
+		  <label class="col-lg-2 control-label">Repetir Contraseña:</label>
+		  <div class="col-lg-10">
+			<input type="password" ng-model="form.passw2" placeholder="Repetir Contraseña">
+		  </div>
+		</div>
+        
+        <div class="control-group">
+          <label class="control-label" for="inputIcon">Email address</label>
+          <div class="controls">
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-envelope"></i></span>
+              <input class="span2" id="inputIcon" type="text">
+            </div>
+          </div>
+        
+        </div>
+        
+         <div class="control-group">
+          <label class="control-label" for="inputIcon">Rubro de la pauta</label>
+          <div class="controls">
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-envelope"></i></span>
+              <select ng-model="url" >
+		    <option ng-repeat="rubro in rubros" value="1">{{ rubro.rubro }}</option>
+		</select>
+            </div>
+          </div>
+        
+        </div>
+        <HR>
+     <P>
+      <label class="control-label" for="inputInfo">Datos de la pauta:</label>
+    </P>
+        <div class="control-group">
+          <label class="control-label" for="inputIcon">Link a la pauta:</label>
+          <div class="controls">
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-envelope"></i></span>
+              <input type="text" size="50" class="input-xxlarge" ng-model="form.Link" placeholder="Ingrese el link de youtube">
+            </div>
+          </div>
+        
+        </div>
+          
+          <div class="control-group">
+          <label class="control-label" for="inputIcon">Describa la pauta:</label>
+          <div class="controls">
+            <div class="input-prepend">
+              <span class="add-on"><i class="icon-envelope"></i></span>
+               <textarea rows="8" cols="60" ng-model="form.Comentario" placeholder="Ingrese un comentario breve"></textarea>
+            </div>
+          </div>
+        
+        </div>
+
+        <div class="form-group" align="center">
+		<button type="submit" class="btn btn-success" ng-disabled="error || Incompleto">
+			<span class="glyphicon glyphicon-save"></span> Guardar Cambios
+		</button>
+        <input class="btn btn-danger" id="cancel" type="button" value ="Cancelar" onclick="$('#popupbox').hide();$('#clientx').reset();$('#block').hide();"/>
+        </div>
+  
+	</form>
+
+	<hr>
+		</div> 
+	<table class="table table-striped">
+	  <thead><tr>
+
+        <th>Orden</th>
+		<th>Descripcion</th>
+     	<th>Proveedor</th>
+        <th>Periodo</th>
+	  </tr></thead>
+	  <tbody><tr ng-repeat="user in users">
+		<td>{{ user.pauOrden }}</td>
+		<td>{{ user.pauDescripcion }}</td>
+        <td>{{ user.pauProveedor }}</td>
+        <td>{{ user.pauPeriodo }}</td>
+	  </tr></tbody>
+	</table>
+    
+  
+
+	  
+
+	
+
+</div>
+
+<!-- Modules -->
+<script src="js/app.js"></script>
+
+<!-- Controllers -->
+<script src="js/controllers/MainController.js"></script>
+
+
+</body>
+</html>
